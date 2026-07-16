@@ -15,8 +15,3 @@ def judge(secret, guess):
     hits = sum(s == g for s, g in zip(secret, guess))
     common = sum(min(secret.count(d), guess.count(d)) for d in set(guess))
     return hits, common - hits
-
-
-def make_secret(digits=3):
-    """重複なしの digits 桁の答えを作る。"""
-    return "".join(random.sample("0123456789", digits))
