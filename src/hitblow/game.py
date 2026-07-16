@@ -6,8 +6,21 @@
    import も自分の場所の近くに書くこと（ファイル先頭にまとめない＝衝突回避）。
 """
 
-from .core import judge, make_secret
+from .core import judge
 
+def input_secret(digits):
+    """プレイヤーが秘密の数字を入力する。"""
+    while True:
+        secret = input(f"{digits}桁の重複のない数字を入力 > ").strip()
+
+        if (
+            len(secret) == digits
+            and secret.isdigit()
+            and len(set(secret)) == digits
+        ):
+            return secret
+
+        print(f"{digits}桁の重複のない数字を入力してください。")
 
 def play():
     while True:
@@ -21,7 +34,7 @@ def play():
 
         print("3~6の数字を入力してね")
 
-    secret = make_secret(digits)
+    secret = input_secret(digits)
 
     print(f"Hit & Blow ({digits} 桁・重複なし)")
 
