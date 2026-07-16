@@ -9,10 +9,21 @@
 from .core import judge, make_secret
 
 
-def play(digits=3):
+def play():
+    while True:
+        digits = input("桁数(3~6)を選んでね").strip()
+
+        if digits.isdigit():
+            digits = int(digits)
+
+            if 3 <= digits <= 6:
+                break
+
+        print("3~6の数字を入力してね")
+
     secret = make_secret(digits)
-    print("Hello!")
-    print(f"Hit & Blow（{digits} 桁・重複なし）")
+
+    print(f"Hit & Blow ({digits} 桁・重複なし)")
 
     # ===== ① 開始時に足す（難易度・あいさつ など）: ここに書く =====
 
