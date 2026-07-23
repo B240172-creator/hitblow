@@ -8,7 +8,9 @@ from getpass import getpass
 def input_secret(digits):
     """プレイヤーが秘密の数字を入力する。"""
     while True:
-        secret = getpass(f"{digits}桁の重複のない数字を入力 > ").strip()
+        secret = getpass(
+            f"{digits}桁の重複のない数字を入力 ※数字は非表示にしています > "
+        ).strip()
 
         if (
             len(secret) == digits
@@ -53,6 +55,10 @@ def play():
     tries2 = 0
     player = 1
 
+    # プレイヤー1が先に当てた後、
+    # プレイヤー2に最後の1回を与えている状態かどうか
+    last_chance = False
+
     while True:
         print(f"\n===== プレイヤー{player}の番 =====")
 
@@ -79,21 +85,53 @@ def play():
 
         # 勝利判定
         if hit == digits:
-            print("\n====================")
+
+            # プレイヤー1が正解
             if player == 1:
-                print(f"🎉 プレイヤー1の勝ち！")
-                print(f"試行回数：{tries1}回")
-                print(f"プレイヤー1の秘密の数字：{secret1}")
-                print(f"プレイヤー2の秘密の数字：{secret2}")
+
+                # プレイヤー2の最後の1回でプレイヤー1も正解した
+                if last_chance:
+                    print("\n====================")
+                    print("🤝 引き分け！")
+                    print(f"プレイヤー1の秘密の数字：{secret1}")
+                    print(f"プレイヤー2の秘密の数字：{secret2}")
+                    print("====================")
+                    break
+
+                print("\n🎉 プレイヤー1が正解！")
+                print("プレイヤー2に最後の1回が与えられます。")
+
+                last_chance = True
+                player = 2
+                continue
+
+            # プレイヤー2が正解
             else:
-                print(f"🎉 プレイヤー2の勝ち！")
-                print(f"試行回数：{tries2}回")
-                print(f"プレイヤー1の秘密の数字：{secret1}")
-                print(f"プレイヤー2の秘密の数字：{secret2}")
+                if last_chance:
+                    print("\n====================")
+                    print("🤝 引き分け！")
+                    print(f"プレイヤー1の秘密の数字：{secret1}")
+                    print(f"プレイヤー2の秘密の数字：{secret2}")
+                    print("====================")
+                    break
+                else:
+                    print("\n====================")
+                    print("🎉 プレイヤー2の勝ち！")
+                    print(f"試行回数：{tries2}回")
+                    print(f"プレイヤー1の秘密の数字：{secret1}")
+                    print(f"プレイヤー2の秘密の数字：{secret2}")
+                    print("====================")
+                    break
+
+        # プレイヤー2の最後の1回が終了しても当てられなかった
+        if last_chance and player == 2:
+            print("\n====================")
+            print("🎉 プレイヤー1の勝ち！")
+            print(f"試行回数：{tries1}回")
+            print(f"プレイヤー1の秘密の数字：{secret1}")
+            print(f"プレイヤー2の秘密の数字：{secret2}")
             print("====================")
             break
 
         # プレイヤー交代
         player = 2 if player == 1 else 1
-
-
