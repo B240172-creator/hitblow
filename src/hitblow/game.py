@@ -82,11 +82,13 @@ def play():
             if player == 1:
                 print(f"🎉 プレイヤー1の勝ち！")
                 print(f"試行回数：{tries1}回")
+                print(f"プレイヤー1の秘密の数字：{secret1}")
                 print(f"プレイヤー2の秘密の数字：{secret2}")
             else:
                 print(f"🎉 プレイヤー2の勝ち！")
                 print(f"試行回数：{tries2}回")
                 print(f"プレイヤー1の秘密の数字：{secret1}")
+                print(f"プレイヤー2の秘密の数字：{secret2}")
             print("====================")
             break
 
