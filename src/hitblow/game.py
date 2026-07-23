@@ -2,12 +2,13 @@
 
 import os
 from .core import judge
+from getpass import getpass
 
 
 def input_secret(digits):
     """プレイヤーが秘密の数字を入力する。"""
     while True:
-        secret = input(f"{digits}桁の重複のない数字を入力 > ").strip()
+        secret = getpass(f"{digits}桁の重複のない数字を入力 > ").strip()
 
         if (
             len(secret) == digits
