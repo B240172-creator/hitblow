@@ -1,12 +1,8 @@
-"""ゲームの進行（入力・表示・ループ）。
+"""ゲームの進行（入力・表示・ループ）。"""
 
-★ チームで足す機能は **自分の担当の場所**に書く（1機能=1ファイル）。
-   下の「ここに足す」場所は3か所（① 開始時 ② 入力コマンド ③ 勝利時）。
-   ペアごとに**別の場所**を直すので、並行作業でも衝突しない。
-   import も自分の場所の近くに書くこと（ファイル先頭にまとめない＝衝突回避）。
-"""
-
+import os
 from .core import judge
+
 
 def input_secret(digits):
     """プレイヤーが秘密の数字を入力する。"""
@@ -22,42 +18,79 @@ def input_secret(digits):
 
         print(f"{digits}桁の重複のない数字を入力してください。")
 
+
+def clear_screen():
+    """画面をクリアする"""
+    os.system("cls")  # Windows
+    # Mac/Linuxの場合は os.system("clear")
+
+
 def play():
     while True:
-        digits = input("桁数(3~6)を選んでね").strip()
+        digits = input("桁数(3~6)を選んでね > ").strip()
 
         if digits.isdigit():
             digits = int(digits)
-
             if 3 <= digits <= 6:
                 break
 
-        print("3~6の数字を入力してね")
+        print("3～6の数字を入力してね")
 
-    secret = input_secret(digits)
+    # プレイヤー1の秘密
+    print("=== プレイヤー1 ===")
+    secret1 = input_secret(digits)
+    clear_screen()
 
-    print(f"Hit & Blow ({digits} 桁・重複なし)")
+    # プレイヤー2の秘密
+    print("=== プレイヤー2 ===")
+    secret2 = input_secret(digits)
+    clear_screen()
 
-    # ===== ① 開始時に足す（難易度・あいさつ など）: ここに書く =====
+    print(f"Hit & Blow（{digits}桁・重複なし）")
 
-    tries = 0
+    tries1 = 0
+    tries2 = 0
+    player = 1
+
     while True:
+        print(f"\n===== プレイヤー{player}の番 =====")
+
         guess = input("予想 > ").strip()
 
-        # ===== ② 入力コマンドに足す（ヒント など）: ここに書く（import もここに） =====
-        # 例:  from .hint import hint
-        #      if guess == "h":
-        #          print(hint(secret)); continue
-
-        if len(guess) != digits or not guess.isdigit():
-            print(f"{digits} 桁の数字で入力してね")
+        # 入力チェック
+        if (
+            len(guess) != digits
+            or not guess.isdigit()
+            or len(set(guess)) != digits
+        ):
+            print(f"{digits}桁の重複のない数字を入力してください。")
             continue
-        tries += 1
-        hit, blow = judge(secret, guess)
-        print(f"  Hit={hit}  Blow={blow}")
+
+        # 判定
+        if player == 1:
+            tries1 += 1
+            hit, blow = judge(secret2, guess)
+        else:
+            tries2 += 1
+            hit, blow = judge(secret1, guess)
+
+        print(f"Hit = {hit}  Blow = {blow}")
+
+        # 勝利判定
         if hit == digits:
-
-            # ===== ③ 勝利時に足す（スコア・履歴 など）: ここに書く =====
-
-            print(f"正解！ {tries} 回で当たり（答え {secret}）")
+            print("\n====================")
+            if player == 1:
+                print(f"🎉 プレイヤー1の勝ち！")
+                print(f"試行回数：{tries1}回")
+                print(f"プレイヤー2の秘密の数字：{secret2}")
+            else:
+                print(f"🎉 プレイヤー2の勝ち！")
+                print(f"試行回数：{tries2}回")
+                print(f"プレイヤー1の秘密の数字：{secret1}")
+            print("====================")
             break
+
+        # プレイヤー交代
+        player = 2 if player == 1 else 1
+
+
